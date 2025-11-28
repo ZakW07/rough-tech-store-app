@@ -11,7 +11,7 @@ public class InventoryManager {
 	}
 	
 	public void addToInventory(Product p) {
-		if (inventory.get(p) != null) {
+		if (inventory.get(p.getName()) != null) {
 			System.out.println("Product ["+p.getName()+"] already exists");
 		}
 		else
@@ -19,31 +19,39 @@ public class InventoryManager {
 	}
 	
 	public void addToCart(String productName) {
-		Product p = inventory.get(productName);
+		if (inventory.get(productName) != null) {
+			Product p = inventory.get(productName);
 		
-		if (inventory.containsKey(productName) == true) {
-			if (p.getStockLevel() > 0) {
+			if (inventory.containsKey(productName) == true) {
+				if (p.getStockLevel() > 0) {
 				shoppingCart.add(p);
 				p.setStockLevel(p.getStockLevel()-1);
+				}
+				else
+					System.out.println("Out of stock");
 			}
 			else
-				System.out.println("Out of stock");
+				System.out.println("Product not found");
 		}
 		else
-			System.out.println("Product not found");
-	}
+			System.out.println("Product does not exist");
+	}	
 	
 	public void removeFromCart(String productName) {
-		Product p = inventory.get(productName);
-		for (int i = 0; i < shoppingCart.size(); i++) {
-			if (shoppingCart.get(i).getName().equalsIgnoreCase(productName)) {
-				shoppingCart.remove(i);
-				p.setStockLevel(p.getStockLevel()+1);
-				break;
+		if (inventory.get(productName) != null) {
+			Product p = inventory.get(productName);
+			
+			for (int i = 0; i < shoppingCart.size(); i++) {
+				if (shoppingCart.get(i).getName().equalsIgnoreCase(productName)) {
+					shoppingCart.remove(i);
+					p.setStockLevel(p.getStockLevel()+1);
+					break;
+				}
 			}
 		}
+		else
+			System.out.println("Product does not exist");
 	}
-	
 	public void checkout() {
 		double totalCost = 0;
 		for (int i = 0; i < shoppingCart.size(); i++) {
